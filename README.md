@@ -228,14 +228,45 @@ paper-briefer input.zip --brief-only
 paper-briefer input.zip --json-only
 ```
 
-## Architecture du code
+## Structure du projet
 
 ```text
-paper_briefer/
-  __init__.py     <- version du package
-  extract.py      <- Moteur d'extraction (ZIP -> DocumentMetadata)
-  brief.py        <- Générateur de brief (DocumentMetadata -> markdown)
-  cli.py          <- Interface en ligne de commande
+paper-briefer/
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md        <- template pour signaler un bug
+│   │   └── feature_request.md   <- template pour proposer une fonctionnalité
+│   ├── pull_request_template.md <- template pour les PR
+│   └── workflows/
+│       └── ci.yml               <- CI GitHub Actions (Python 3.10-3.13)
+├── docs/
+│   ├── design-decisions/
+│   │   ├── 001-positioning.md   <- pourquoi "paper-briefer" (Option C)
+│   │   ├── 002-extraction-priorities.md <- priorités d'extraction
+│   │   └── 003-compression-validation.md <- protocole de validation
+│   └── validation-test.md      <- résultats détaillés du test 5 questions
+├── examples/
+│   ├── README.md               <- source et contexte de l'exemple
+│   ├── *-brief.md              <- brief généré (~4K tokens)
+│   └── *-metadata.json         <- métadonnées structurées complètes
+├── paper_briefer/
+│   ├── __init__.py             <- version du package
+│   ├── extract.py              <- moteur d'extraction (ZIP -> DocumentMetadata)
+│   ├── brief.py                <- générateur de brief (DocumentMetadata -> markdown)
+│   └── cli.py                  <- interface en ligne de commande
+├── tests/
+│   ├── test_extract.py         <- tests du moteur d'extraction
+│   └── test_brief.py           <- tests du générateur de brief
+├── .gitignore
+├── .markdownlint.json          <- config du linter markdown
+├── CHANGELOG.md                <- historique des versions
+├── CLAUDE.md                   <- instructions pour assistants IA
+├── CODE_OF_CONDUCT.md          <- code de conduite
+├── CONTRIBUTING.md             <- guide de contribution
+├── LICENSE                     <- licence MIT
+├── pyproject.toml              <- configuration du package Python
+├── README.md                   <- ce fichier
+└── SECURITY.md                 <- politique de sécurité
 ```
 
 ### Couches d'extraction
