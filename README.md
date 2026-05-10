@@ -1,4 +1,4 @@
-# paper-briefer
+# Paper-Briefer
 
 > Compresse des articles scientifiques en contexte optimisé pour les conversations avec des LLM (Claude, ChatGPT, etc.).
 
@@ -27,7 +27,7 @@ Voici le processus de bout en bout, du PDF brut à la conversation avec un LLM :
 ┌─────────────────────────────────────────────────────────────────────┐
 │  1. DOCUMENT SOURCE                                                 │
 │     Un article scientifique au format PDF                           │
-│     (ex: DeepSeek-V4, 46 pages)                                    │
+│     (ex: DeepSeek-V4, 46 pages)                                     │
 └────────────────────────────┬────────────────────────────────────────┘
                              │
                              ▼
@@ -52,9 +52,9 @@ Voici le processus de bout en bout, du PDF brut à la conversation avec un LLM :
                              ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │  4. CONVERSATION LLM                                                │
-│     Collez le brief dans Claude, ChatGPT, ou tout autre LLM.       │
+│     Collez le brief dans Claude, ChatGPT, ou tout autre LLM.        │
 │     Posez vos questions. Le LLM répond comme s'il avait lu          │
-│     l'article entier — parce qu'il a la structure, pas le bruit.   │
+│     l'article entier — parce qu'il a la structure, pas le bruit.    │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
