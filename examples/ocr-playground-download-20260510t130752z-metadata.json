@@ -1,0 +1,1285 @@
+{
+  "title": "DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence",
+  "authors": "research@deepseek.com",
+  "source_file": "ocr-playground-download-20260510T130752Z.zip",
+  "total_pages": 46,
+  "total_word_count": 20270,
+  "total_images": 22,
+  "language": "en",
+  "document_type": "technical_report",
+  "abstract": "We present a preview version of DeepSeek-V4 series, including two strong Mixture-of-Experts (MoE) language models — DeepSeek-V4-Pro with 1.6T parameters (49B activated) and DeepSeek-V4-Flash with 284B parameters (13B activated) — both supporting a context length of one million tokens. DeepSeek-V4 series incorporate several key upgrades in architecture and optimization: (1) a hybrid attention architecture that combines Compressed Sparse Attention (CSA) and Heavily Compressed Attention (HCA) to improve long-context efficiency; (2) Manifold-Constrained Hyper-Connections (mHC) that enhance conventional residual connections; (3) and the Muon optimizer for faster convergence and greater training stability. We pre-train both models on more than 32T diverse and high-quality tokens, followed by a comprehensive post-training pipeline that unlocks and further enhances their capabilities. DeepSeek-V4-Pro-Max, the maximum reasoning effort mode of DeepSeek-V4-Pro, redefines the state-of-the-art for open models, outperforming its predecessors in core tasks. Meanwhile, DeepSeek-V4 series are highly efficient in long-context scenarios. In the one-million-token context setting, DeepSeek-V4-Pro requires only $27\\%$ of single-token inference FLOPs and $10\\%$ of KV cache compared with DeepSeek-V3.2. This enables us to routinely support one-million-token contexts, thereby making long-horizon tasks and further test-time scaling more feasible. The model checkpoints are available at https://huggingfa",
+  "key_contributions": [
+    "the DeepSeek-V4 series",
+    "a hybrid attention mechanism combining Compressed Sparse Attention (CSA) and Heavily Compressed Attention (HCA)",
+    "the Muon *(Jordan et al",
+    "several infrastructure optimizations",
+    "and implement a single fused kernel for MoE modules that fully overlaps computation",
+    "a heterogeneous KV cache structure with on-disk storage strategies to enable efficient shared-prefix reuse"
+  ],
+  "model_specs": {
+    "DeepSeek-V4-Pro": {
+      "total_parameters": "1.6T",
+      "activated_parameters": "49B"
+    },
+    "and DeepSeek-V4-Flash": {
+      "total_parameters": "284B",
+      "activated_parameters": "13B"
+    },
+    "iew versions of DeepSeek-V4-Pro": {
+      "total_parameters": "1.6T",
+      "activated_parameters": "49B"
+    }
+  },
+  "table_of_contents": [
+    {
+      "section": "1",
+      "title": "Introduction",
+      "page": 4
+    },
+    {
+      "section": "2",
+      "title": "Architecture",
+      "page": 6
+    },
+    {
+      "section": "2.1",
+      "title": "Designs Inherited from DeepSeek-V3",
+      "page": 7
+    },
+    {
+      "section": "2.2",
+      "title": "Manifold-Constrained Hyper-Connections",
+      "page": 7
+    },
+    {
+      "section": "2.3",
+      "title": "Hybrid Attention with CSA and HCA",
+      "page": 9
+    },
+    {
+      "section": "2.3.1",
+      "title": "Compressed Sparse Attention",
+      "page": 9
+    },
+    {
+      "section": "2.3.2",
+      "title": "Heavily Compressed Attention",
+      "page": 11
+    },
+    {
+      "section": "2.3.3",
+      "title": "Other Details",
+      "page": 12
+    },
+    {
+      "section": "2.3.4",
+      "title": "Efficiency Discussion",
+      "page": 13
+    },
+    {
+      "section": "2.4",
+      "title": "Muon Optimizer",
+      "page": 14
+    },
+    {
+      "section": "3",
+      "title": "General Infrastructures",
+      "page": 15
+    },
+    {
+      "section": "3.1",
+      "title": "Fine-Grained Communication-Computation Overlap in Expert Parallelism",
+      "page": 15
+    },
+    {
+      "section": "3.2",
+      "title": "Flexible and Efficient Kernel Development with TileLang",
+      "page": 16
+    },
+    {
+      "section": "3.3",
+      "title": "High-Performance Batch-Invariant and Deterministic Kernel Libraries",
+      "page": 18
+    },
+    {
+      "section": "3.4",
+      "title": "Training Framework",
+      "page": 19
+    },
+    {
+      "section": "3.4.1",
+      "title": "Efficient Implementation of Muon",
+      "page": 19
+    },
+    {
+      "section": "3.4.2",
+      "title": "Cost-Effective and Memory-Efficient Implementation of mHC",
+      "page": 20
+    },
+    {
+      "section": "3.4.3",
+      "title": "Contextual Parallelism for Long-Context Attention",
+      "page": 20
+    },
+    {
+      "section": "3.4.4",
+      "title": "Extended Automatic Differentiation for Flexible Activation Checkpointing",
+      "page": 21
+    },
+    {
+      "section": "3.5",
+      "title": "Inference Framework",
+      "page": 21
+    },
+    {
+      "section": "3.5.1",
+      "title": "KV Cache Structure and Management",
+      "page": 21
+    },
+    {
+      "section": "3.5.2",
+      "title": "On-Disk KV Cache Storage",
+      "page": 23
+    },
+    {
+      "section": "4",
+      "title": "Pre-Training",
+      "page": 24
+    },
+    {
+      "section": "4.1",
+      "title": "Data Construction",
+      "page": 24
+    },
+    {
+      "section": "4.2",
+      "title": "Pre-Training Setups",
+      "page": 24
+    },
+    {
+      "section": "4.2.1",
+      "title": "Model Setups",
+      "page": 24
+    },
+    {
+      "section": "4.2.2",
+      "title": "Training Setups",
+      "page": 25
+    },
+    {
+      "section": "4.2.3",
+      "title": "Mitigating Training Instability",
+      "page": 26
+    },
+    {
+      "section": "4.3",
+      "title": "Evaluations",
+      "page": 27
+    },
+    {
+      "section": "4.3.1",
+      "title": "Evaluation Benchmarks",
+      "page": 27
+    },
+    {
+      "section": "4.3.2",
+      "title": "Evaluation Results",
+      "page": 27
+    },
+    {
+      "section": "5.1",
+      "title": "Post-Training Pipeline",
+      "page": null
+    },
+    {
+      "section": "5.1.1",
+      "title": "Specialist Training",
+      "page": null
+    },
+    {
+      "section": "5.1.2",
+      "title": "On-Policy Distillation",
+      "page": null
+    },
+    {
+      "section": "5.2",
+      "title": "Post-Training Infrastructures",
+      "page": null
+    },
+    {
+      "section": "5.2.1",
+      "title": "FP4 Quantization-Aware Training",
+      "page": null
+    },
+    {
+      "section": "5.2.2",
+      "title": "Efficient Teacher Scheduling for Full-Vocabulary OPD",
+      "page": null
+    },
+    {
+      "section": "5.2.3",
+      "title": "Preemptible and Fault-Tolerant Rollout Service",
+      "page": null
+    },
+    {
+      "section": "5.2.4",
+      "title": "Scaling RL Framework for Million-Token Context",
+      "page": null
+    },
+    {
+      "section": "5.2.5",
+      "title": "Sandbox Infrastructure for Agentic AI",
+      "page": null
+    },
+    {
+      "section": "5.3",
+      "title": "Standard Benchmark Evaluation",
+      "page": null
+    },
+    {
+      "section": "5.3.1",
+      "title": "Evaluation Setup",
+      "page": null
+    },
+    {
+      "section": "5.3.2",
+      "title": "Evaluation Results",
+      "page": null
+    },
+    {
+      "section": "5.4",
+      "title": "Performance on Real-World Tasks",
+      "page": null
+    },
+    {
+      "section": "5.4.1",
+      "title": "Chinese Writing",
+      "page": null
+    },
+    {
+      "section": "5.4.2",
+      "title": "Search",
+      "page": null
+    },
+    {
+      "section": "5.4.3",
+      "title": "White-Collar Task",
+      "page": null
+    },
+    {
+      "section": "5.4.4",
+      "title": "Code Agent",
+      "page": null
+    },
+    {
+      "section": "6",
+      "title": "Conclusion, Limitations, and Future Directions",
+      "page": null
+    }
+  ],
+  "limitations": "- A Author List and Acknowledgment - A.1 Author List - A.2 Acknowledgment - B Evaluation Details 1 Introduction The emergence of reasoning models *(DeepSeek-AI, 2025; OpenAI, 2024c)* has established a new paradigm of test-time scaling, driving substantial performance gains for Large Language Models (LLMs). However, this scaling paradigm is fundamentally constrained by the quadratic computational complexity of the vanilla attention mechanism *(Vaswani et al., 2017)*, which creates a prohibitive bottleneck for ultra-long contexts and reasoning processes. Concurrently, the emergence of long-horizon scenarios and tasks — from complex agentic workflows to massive cross-document analysis — has also made efficient support for ultra-long contexts critical for future progress. While recent open-source efforts *(Bai et al., 2025a; DeepSeek-AI, 2024; MiniMax, 2025; Qwen, 2025)* have advanced general capabilities, this core architectural inefficiency in handling ultra-long sequences remains a key impediment, limiting further gains from test-time scaling and hindering further exploration into long-horizon scenarios and tasks. In order to break the efficiency barrier in ultra-long contexts, we develop the DeepSeek-V4 series, including the preview versions of DeepSeek-V4-Pro with 1.6T parameters (49B activated) and DeepSeek-V4-Flash with 284B parameters (13B activated). Through architectural innovations, DeepSeek-V4 series achieve a dramatic leap in computational efficiency for processing ultra-long sequences. This breakthrough enables efficient support for a context length of one million tokens, ushering in a new era of million-length contexts for next-generation LLMs. We believe our capability to efficiently handle ultra-long sequences unlocks the next frontier of test-time scaling, paves the way for deeper research into long-horizon tasks, and establishes a necessary foundation for exploring future paradigms like online learning. Compared with the DeepSeek-V3 architecture *(Dee",
+  "figures_and_tables": [
+    {
+      "id": "Figure 1",
+      "page": 1,
+      "caption": "Left: benchmark performance of DeepSeek-V4-Pro-Max and its counterparts. Right: inference FLOPs and KV cache size of DeepSeek-V4 series and DeepSeek-V3.2.",
+      "anchor_sentences": [
+        "Figure 1 | Left: benchmark performance of DeepSeek-V4-Pro-Max and its counterparts.",
+        "The right part of Figure 1 demonstrates the estimated single-token inference FLOPs and accumulated KV cache size of DeepSeek-V3.2 and DeepSeek-V4 series.",
+        "A comparison of their inference FLOPs and KV cache size is provided in the right part of Figure 1."
+      ]
+    },
+    {
+      "id": "Figure 2",
+      "page": 6,
+      "caption": "Overall architecture of DeepSeek-V4 series. We use hybrid CSA (Compressed Sparse Attention) and HCA (Heavily Compressed Attention) for attention layers, DeepSeekMoE for feed-forward layers, and strengthen conventional residual connections with mHC.",
+      "anchor_sentences": [
+        "Furthermore, DeepSeek-V4-Flash-Max achieves comparable Figure 2 | Overall architecture of DeepSeek-V4 series.",
+        "Figure 2 illustrates the overall architecture of DeepSeek-V4, and the details are described below.",
+        "### 2.2 Manifold-Constrained Hyper-Connections As shown in Figure 2, DeepSeek-V4 series incorporate Manifold-Constrained Hyper-Connections ($m$HC) *(Xie et al., 2026)* to strengthen the conventional residual connections between adjacent Transformer blocks."
+      ]
+    },
+    {
+      "id": "Figure 3",
+      "page": 9,
+      "caption": "Core architectures of CSA. It compresses the number of KV entries to  $\\frac{1}{m}$  times, and then applies DeepSeek Sparse Attention for further acceleration. Additionally, a small set of sliding window KV entries is combined with the selected compressed KV entries to enhance local fine-grained dependencies.",
+      "anchor_sentences": [
+        "## Figure 3 | Core architectures of CSA.",
+        "Compressed Sparse Attention The core architecture of CSA is illustrated in Figure 3, which first compresses the KV cache of each $m$ tokens into one entry, and then applies DeepSeek Sparse Attention for further acceleration."
+      ]
+    },
+    {
+      "id": "Figure 4",
+      "page": 11,
+      "caption": "Core architectures of HCA. It performs heavier compression, where the KV entries of  $m'$  ( $\\gg m$ ) tokens will be consolidated into one. Also, we additionally introduce a small set of sliding window KV entries to enhance local fine-grained dependencies.",
+      "anchor_sentences": [
+        "For a query token $t$, given its index scores $I_{t,:}$, we employ a top-k selector to selectively retain a subset of compressed KV entries $C^{\\text{SprsComp}}_{t}$ for subsequent core attention: $C^{\\text{SprsComp}}_{t}=\\left\\{C^{\\text{Comp}}_{s}\\left|\\right.I_{t,s}\\in\\text{Top-k}(I_{t,:})\\right\\}",
+        "Heavily Compressed Attention The core architecture of HCA is illustrated in Figure 4, which compresses the KV cache in a heavier manner, but does not employ sparse attention."
+      ]
+    },
+    {
+      "id": "Figure 5",
+      "page": 15,
+      "caption": "Illustration of our EP scheme with related works. Comet (Zhang et al., 2025b) overlaps Dispatch with Linear-1, and Linear-2 with Combine, separately. Our EP scheme achieves a finer-grained overlapping by splitting and scheduling experts into waves. The theoretical speedup is evaluated in the configuration of the DeepSeek-V4-Flash architecture.",
+      "anchor_sentences": [
+        "As shown in Figure 5, in DeepSeek-V4 series, each MoE layer can be decomposed mainly into four stages: two communication-bound stages, Dispatch and Combine, and two computation-bound stages, Linear-1 and Linear-2.",
+        "Figure 5 | Illustration of our EP scheme with related works.",
+        "In steady state, computation of current wave, token transfer for the next wave, and result sending of completed experts all proceed concurrently, as demonstrated in Figure 5."
+      ]
+    },
+    {
+      "id": "Figure 6",
+      "page": 21,
+      "caption": "Illustration of the KV cache Layout for DeepSeek-V4. The KV cache is organized into two primary components: a classical KV cache for CSA/HCA, and a state cache for SWA and unready-for-compression tokens in CSA/HCA. In the state cache, each request is assigned a fixed-size cache block. Within this block, the SWA segment stores the KV entries corresponding to the most recent  $n_{\\mathrm{win}}$  tokens, while the CSA/HCA segment stores uncompressed tail states that are not yet ready for compression. In the classical KV cache, we allocate multiple blocks per request. Each cache block covers  $\\operatorname{lcm}(m, m')$  original tokens, producing  $k_1 = \\frac{\\operatorname{lcm}(m, m')}{m}$  CSA compressed tokens and  $k_2 = \\frac{\\operatorname{lcm}(m, m')}{m'}$  HCA compressed tokens.",
+      "anchor_sentences": [
+        "The layout is illustrated in Figure 6, and we will elaborate on it in detail as follows.",
+        "The lightning indexer for sparse selection introduces additional dimensions Figure 6 | Illustration of the KV cache Layout for DeepSeek-V4."
+      ]
+    },
+    {
+      "id": "Figure 7",
+      "page": 31,
+      "caption": "Thinking management of DeepSeek-V4 series.",
+      "anchor_sentences": [
+        "a) Thinking with tools b) Thinking without tools Figure 7 | Thinking management of DeepSeek-V4 series.",
+        "As illustrated in Figure 7(a), all reasoning content is fully preserved throughout the entire conversation.",
+        "As illustrated in Figure 7(b), the original strategy is preserved: reasoning content from previous turns is discarded when a new user message arrives, keeping the context concise for settings where persistent reasoning traces provide limited benefit."
+      ]
+    },
+    {
+      "id": "Figure 8",
+      "page": 39,
+      "caption": "Formal reasoning under practical and frontier regimes. Left: Putnam-200 Pass@8 evaluates a fixed random subset of PutnamBench (Tsoukalas et al., 2024) following the setup introduced by Seed-Prover; all models are tested on the same problem set. We follow the Seed-Prover protocol but replace proprietary search tools with the open-source LeanExplore (Asher, 2025), yielding a lightweight setting with minimal agent tools and bounded sampling. Right: Putnam-2025 probes the frontier of mathematical reasoning in a scaled hybrid formal-informal regime, where informal reasoning is combined with formal verification to expose gaps and improve rigor; DeepSeek-V4 reaches a proof-perfect 120/120.",
+      "anchor_sentences": [
+        "Under an agentic setup, it achieves state-of-the-art results, shown in Figure 8, outperforming prior models such as Seed Prover (Chen et al., 2025).",
+        "Figure 8 | Formal reasoning under practical and frontier regimes."
+      ]
+    },
+    {
+      "id": "Figure 9",
+      "page": 39,
+      "caption": "DeepSeek-V4 series performance on the MRCR task.",
+      "anchor_sentences": [
+        "As illustrated in Figure 9, retrieval performance remains highly stable within a 128K context window.",
+        "Figure 9 | DeepSeek-V4 series performance on the MRCR task."
+      ]
+    },
+    {
+      "id": "Figure 10",
+      "page": 40,
+      "caption": "HLE and Terminal Bench 2.0 performance by reasoning effort. \"None\" indicates Non-think mode, and \"Speciale\" indicates DeepSeek-V3.2-Speciale model.",
+      "anchor_sentences": [
+        "Figure 10 presents a comparison of performance and cost among DeepSeek-V4-Pro, DeepSeek-V4-Flash, and DeepSeek-V3.2 on representative reasoning and agentic tasks.",
+        "Figure 10 | HLE and Terminal Bench 2.0 performance by reasoning effort."
+      ]
+    },
+    {
+      "id": "Figure 11",
+      "page": 42,
+      "caption": "Win-rate comparison across analysis, generation, editing tasks, and the overall performance.",
+      "anchor_sentences": [
+        "As illustrated in Figure 11, DeepSeek-V4-Pro-Max outperforms Opus-4.6-Max on diverse Chinese white-collar tasks, achieving an impressive non-loss rate of 63%, and demonstrating consistent advantages across analysis, generation, and editing tasks.",
+        "Figure 11 | Win-rate comparison across analysis, generation, editing tasks, and the overall performance."
+      ]
+    },
+    {
+      "id": "Figure 12",
+      "page": 42,
+      "caption": "Detailed dimension scores including Task Completion, Content Quality, Formatting Aesthetics, and Instruction Following.",
+      "anchor_sentences": [
+        "The detailed dimension scores shown in Figure 12 highlight the model’s primary strengths in Task Completion and Content Quality.",
+        "Figure 12 | Detailed dimension scores including Task Completion, Content Quality, Formatting Aesthetics, and Instruction Following."
+      ]
+    },
+    {
+      "id": "Figure 13",
+      "page": 43,
+      "caption": "Example output of a task which requires drafting a joint marketing proposal for a popular bubble tea brand and the Beijing Subway.",
+      "anchor_sentences": [
+        "Figure 13, 14, and 15 present several test cases; due to the extensive length of certain outputs, only partial pages are displayed.",
+        "Figure 13 | Example output of a task which requires drafting a joint marketing proposal for a popular bubble tea brand and the Beijing Subway."
+      ]
+    },
+    {
+      "id": "Table 1",
+      "page": 27,
+      "caption": "Comparison among DeepSeek-V3.2-Base, DeepSeek-V4-Flash-Base, and DeepSeek-V4-Pro-Base. All models are evaluated in our internal framework and share the same evaluation setting. Scores with a gap not exceeding 0.3 are considered to be at the same level. The highest score in each row is in bold font, and the second is underlined.",
+      "anchor_sentences": [
+        "#### 4.3.2 Evaluation Results In Table 1, we provide a detailed comparison of the base models for DeepSeek-V3.2, DeepSeek-V4-Flash, and DeepSeek-V4-Pro, all evaluated under a unified internal framework with strictly consistent settings.",
+        "Table 1 | Comparison among DeepSeek-V3.2-Base, DeepSeek-V4-Flash-Base, and DeepSeek-V4-Pro-Base.",
+        "Table 12 presents a pairwise comparison between DeepSeek-V4-Pro and Gemini-3.1-Pro on functional writing tasks."
+      ]
+    },
+    {
+      "id": "Table 2",
+      "page": 29,
+      "caption": "Comparison of three reasoning modes",
+      "anchor_sentences": [
+        "As detailed in Table 2, DeepSeek-V4-Pro and DeepSeek-V4-Flash both support three specific reasoning effort modes.",
+        "Table 2 | Comparison of three reasoning modes | Reasoning Mode | Characteristics | Typical Use Cases | Response Format | | --- | --- | --- | --- | | Non-think | Fast, intuitive responses based on habits or simple rules."
+      ]
+    },
+    {
+      "id": "Table 3",
+      "page": 29,
+      "caption": "Instruction injected into the system prompt for the \"Think Max\" mode.",
+      "anchor_sentences": [
+        "Furthermore, for the \"Think Max\" mode, we prepend a specific instruction to the beginning of the system prompt to guide the model's reasoning process, as shown in Table 3.",
+        "<think> thinking tokens </think> summary | Table 3 | Instruction injected into the system prompt for the \"Think Max\" mode."
+      ]
+    },
+    {
+      "id": "Table 4",
+      "page": 30,
+      "caption": "Tool-call schema for DeepSeek-V4 series.",
+      "anchor_sentences": [
+        "Table 4 | Tool-call schema for DeepSeek-V4 series.",
+        "In DeepSeek-V4 series, we introduce a new tool-call schema that employs a special “|DSML|” token and utilizes an XML-based format for tool invocations, as demonstrated in Table 4."
+      ]
+    },
+    {
+      "id": "Table 5",
+      "page": 32,
+      "caption": "Quick Instruction special tokens for auxiliary tasks.",
+      "anchor_sentences": [
+        "Table 5 | Quick Instruction special tokens for auxiliary tasks.",
+        "The supported Quick Instruction tokens are summarized in Table 5."
+      ]
+    },
+    {
+      "id": "Table 6",
+      "page": 37,
+      "caption": "Comparison between DeepSeek-V4-Pro-Max and closed/open source models. \"Max\", \"xHigh\", and \"High\" denote reasoning effort. The best results are highlighted in bold; the second-best results are underlined.",
+      "anchor_sentences": [
+        "#### 5.3.2 Evaluation Results The comparison of DeepSeek-V4-Pro-Max and other closed/open source models is presented in Table 6.",
+        "Table 6 | Comparison between DeepSeek-V4-Pro-Max and closed/open source models."
+      ]
+    },
+    {
+      "id": "Table 7",
+      "page": 37,
+      "caption": "Comparison among different sizes and modes of DeepSeek-V4 series. \"Non-Think\", \"High\", and \"Max\" denote reasoning effort.",
+      "anchor_sentences": [
+        "Also, we evaluate different modes of DeepSeek-V4-Flash and DeepSeek-V4-Pro and show the results in Table 7.",
+        "Meanwhile, DeepSeek-V4-Pro and DeepSeek-V4-Flash excel in cod Table 7 | Comparison among different sizes and modes of DeepSeek-V4 series.",
+        "As shown in Table 7, the Max mode, which employs longer contexts and reduced length penalties in RL, outperforms the High mode on the most challenging tasks."
+      ]
+    },
+    {
+      "id": "Table 13",
+      "page": 41,
+      "caption": "presents the creative writing comparison, which is evaluated along two axes: instruction following and writing quality. Compared with Gemini-3.1-Pro, DeepSeek-V4-Pro achieves a  $60.0\\%$  win rate in instruction following and  $77.5\\%$  in writing quality, demonstrating a marginal improvement in instruction following and a substantial gain in writing quality. Although DeepSeek-V4-Pro yields superior results in aggregate user case analysis, an evaluation restricted to the most challenging prompts — specifically those involving high-complexity constraints or multi-turn scenarios — reveals that Claude Opus 4.5 retains a performance advantage over DeepSeek-V4-Pro. As shown in Table 14, Claude Opus 4.5 achieves a  $52.0\\%$  win rate versus  $45.9\\%$ .",
+      "anchor_sentences": [
+        "Table 13 presents the creative writing comparison, which is evaluated along two axes: instruction following and writing quality."
+      ]
+    },
+    {
+      "id": "Table 8",
+      "page": 44,
+      "caption": "Comparison on R&amp;D Coding Benchmark (external models included strictly for evaluation purposes).",
+      "anchor_sentences": [
+        "As shown in Table 8, DeepSeek-V4-Pro significantly outperforms Claude Sonnet 4.5 and approaches the level of Claude Opus 4.5.",
+        "Table 8 | Comparison on R&amp;D Coding Benchmark (external models included strictly for evaluation purposes)."
+      ]
+    }
+  ],
+  "cross_references": [
+    {
+      "source_page": 7,
+      "source_context": "### 2.2 Manifold-Constrained Hyper-Connections As shown in Figure 2, DeepSeek-V4 series incorporate Manifold-Constrai",
+      "target_type": "figure",
+      "target_id": "Figure 2"
+    },
+    {
+      "source_page": 15,
+      "source_context": "ctively hidden beneath computation in MoE layers. As shown in Figure 5, in DeepSeek-V4 series, each MoE layer can be dec",
+      "target_type": "figure",
+      "target_id": "Figure 5"
+    },
+    {
+      "source_page": 29,
+      "source_context": "em prompt to guide the model's reasoning process, as shown in Table 3. Table 2 | Comparison of three reasoning modes",
+      "target_type": "table",
+      "target_id": "Table 3"
+    },
+    {
+      "source_page": 40,
+      "source_context": "is better than Gemini-3.1-Pro. Reasoning Effort. As shown in Table 7, the Max mode, which employs longer contexts and",
+      "target_type": "table",
+      "target_id": "Table 7"
+    },
+    {
+      "source_page": 41,
+      "source_context": "ins a performance advantage over DeepSeek-V4-Pro. As shown in Table 14, Claude Opus 4.5 achieves a $52.0\\%$ win rate v",
+      "target_type": "table",
+      "target_id": "Table 14"
+    },
+    {
+      "source_page": 42,
+      "source_context": "e accuracy within a predefined \"thinking budget\". As shown in Table 9, agentic search consistently outperforms RAG, par",
+      "target_type": "table",
+      "target_id": "Table 9"
+    },
+    {
+      "source_page": 42,
+      "source_context": "only marginally more expensive than standard RAG (see Table 10). #### 5.4.3 White-Collar Task To rigorously ev",
+      "target_type": "table",
+      "target_id": "Table 10"
+    },
+    {
+      "source_page": 44,
+      "source_context": "ing, 30 tasks are retained as the evaluation set. As shown in Table 8, DeepSeek-V4-Pro significantly outperforms Claude",
+      "target_type": "table",
+      "target_id": "Table 8"
+    }
+  ],
+  "citation_density": [
+    {
+      "page": 1,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 2,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 3,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 4,
+      "citation_count": 13,
+      "density_pct": 2.4,
+      "signal": "normal"
+    },
+    {
+      "page": 5,
+      "citation_count": 11,
+      "density_pct": 2.03,
+      "signal": "normal"
+    },
+    {
+      "page": 6,
+      "citation_count": 2,
+      "density_pct": 0.91,
+      "signal": "normal"
+    },
+    {
+      "page": 7,
+      "citation_count": 15,
+      "density_pct": 2.98,
+      "signal": "normal"
+    },
+    {
+      "page": 8,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 9,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 10,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 11,
+      "citation_count": 1,
+      "density_pct": 0.22,
+      "signal": "low_citation"
+    },
+    {
+      "page": 12,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 13,
+      "citation_count": 5,
+      "density_pct": 0.87,
+      "signal": "normal"
+    },
+    {
+      "page": 14,
+      "citation_count": 6,
+      "density_pct": 1.53,
+      "signal": "normal"
+    },
+    {
+      "page": 15,
+      "citation_count": 1,
+      "density_pct": 0.28,
+      "signal": "low_citation"
+    },
+    {
+      "page": 16,
+      "citation_count": 2,
+      "density_pct": 0.48,
+      "signal": "low_citation"
+    },
+    {
+      "page": 17,
+      "citation_count": 3,
+      "density_pct": 0.59,
+      "signal": "normal"
+    },
+    {
+      "page": 18,
+      "citation_count": 7,
+      "density_pct": 1.57,
+      "signal": "normal"
+    },
+    {
+      "page": 19,
+      "citation_count": 5,
+      "density_pct": 1.0,
+      "signal": "normal"
+    },
+    {
+      "page": 20,
+      "citation_count": 4,
+      "density_pct": 0.76,
+      "signal": "normal"
+    },
+    {
+      "page": 21,
+      "citation_count": 2,
+      "density_pct": 0.41,
+      "signal": "low_citation"
+    },
+    {
+      "page": 22,
+      "citation_count": 2,
+      "density_pct": 0.48,
+      "signal": "low_citation"
+    },
+    {
+      "page": 23,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 24,
+      "citation_count": 4,
+      "density_pct": 0.75,
+      "signal": "normal"
+    },
+    {
+      "page": 25,
+      "citation_count": 2,
+      "density_pct": 0.28,
+      "signal": "low_citation"
+    },
+    {
+      "page": 26,
+      "citation_count": 2,
+      "density_pct": 0.38,
+      "signal": "low_citation"
+    },
+    {
+      "page": 27,
+      "citation_count": 46,
+      "density_pct": 12.3,
+      "signal": "high_citation"
+    },
+    {
+      "page": 28,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 29,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 30,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 31,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 32,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 33,
+      "citation_count": 5,
+      "density_pct": 0.91,
+      "signal": "normal"
+    },
+    {
+      "page": 34,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 35,
+      "citation_count": 7,
+      "density_pct": 1.38,
+      "signal": "normal"
+    },
+    {
+      "page": 36,
+      "citation_count": 20,
+      "density_pct": 3.8,
+      "signal": "high_citation"
+    },
+    {
+      "page": 37,
+      "citation_count": 21,
+      "density_pct": 4.23,
+      "signal": "high_citation"
+    },
+    {
+      "page": 38,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 39,
+      "citation_count": 2,
+      "density_pct": 0.29,
+      "signal": "low_citation"
+    },
+    {
+      "page": 40,
+      "citation_count": 2,
+      "density_pct": 0.8,
+      "signal": "normal"
+    },
+    {
+      "page": 41,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 42,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 43,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 44,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    },
+    {
+      "page": 45,
+      "citation_count": 2,
+      "density_pct": 0.35,
+      "signal": "low_citation"
+    },
+    {
+      "page": 46,
+      "citation_count": 0,
+      "density_pct": 0.0,
+      "signal": "low_citation"
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "word_count": 230,
+      "has_images": true,
+      "image_count": 3,
+      "has_tables": false,
+      "headings": [
+        "deepseek",
+        "DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence",
+        "Abstract"
+      ]
+    },
+    {
+      "page_number": 2,
+      "word_count": 164,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "Contents"
+      ]
+    },
+    {
+      "page_number": 3,
+      "word_count": 111,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 4,
+      "word_count": 542,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 5,
+      "word_count": 543,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 6,
+      "word_count": 219,
+      "has_images": true,
+      "image_count": 1,
+      "has_tables": false,
+      "headings": [
+        "2. Architecture"
+      ]
+    },
+    {
+      "page_number": 7,
+      "word_count": 503,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "2.1 Designs Inherited from DeepSeek-V3",
+        "Mixture-of-Experts.",
+        "Multi-Token Prediction.",
+        "2.2 Manifold-Constrained Hyper-Connections",
+        "Standard Hyper-Connections."
+      ]
+    },
+    {
+      "page_number": 8,
+      "word_count": 444,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "Manifold-Constrained Residual Mapping.",
+        "Dynamic Parameterization.",
+        "Applying Parameter Constraints."
+      ]
+    },
+    {
+      "page_number": 9,
+      "word_count": 314,
+      "has_images": true,
+      "image_count": 1,
+      "has_tables": false,
+      "headings": [
+        "2.3. Hybrid Attention with CSA and HCA",
+        "2.3.1. Compressed Sparse Attention"
+      ]
+    },
+    {
+      "page_number": 10,
+      "word_count": 337,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "Lightning Indexer for Sparse Selection."
+      ]
+    },
+    {
+      "page_number": 11,
+      "word_count": 454,
+      "has_images": true,
+      "image_count": 1,
+      "has_tables": false,
+      "headings": [
+        "2.3.2. Heavily Compressed Attention"
+      ]
+    },
+    {
+      "page_number": 12,
+      "word_count": 361,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "Shared Key-Value MQA and Grouped Output Projection.",
+        "2.3.3 Other Details",
+        "Query and Key-Value Entry Normalization."
+      ]
+    },
+    {
+      "page_number": 13,
+      "word_count": 572,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "2.3.4 Efficiency Discussion"
+      ]
+    },
+    {
+      "page_number": 14,
+      "word_count": 391,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "2.4 Muon Optimizer"
+      ]
+    },
+    {
+      "page_number": 15,
+      "word_count": 353,
+      "has_images": true,
+      "image_count": 1,
+      "has_tables": false,
+      "headings": [
+        "3. General Infrastructures",
+        "3.1. Fine-Grained Communication-Computation Overlap in Expert Parallelism"
+      ]
+    },
+    {
+      "page_number": 16,
+      "word_count": 413,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "3.2 Flexible and Efficient Kernel Development with TileLang"
+      ]
+    },
+    {
+      "page_number": 17,
+      "word_count": 510,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 18,
+      "word_count": 447,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "3.3 High-Performance Batch-Invariant and Deterministic Kernel Libraries"
+      ]
+    },
+    {
+      "page_number": 19,
+      "word_count": 498,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "3.4 Training Framework",
+        "3.4.1 Efficient Implementation of Muon"
+      ]
+    },
+    {
+      "page_number": 20,
+      "word_count": 523,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "3.4.2 Cost-Effective and Memory-Efficient Implementation of mHC",
+        "3.4.3 Contextual Parallelism for Long-Context Attention"
+      ]
+    },
+    {
+      "page_number": 21,
+      "word_count": 482,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "3.4.4 Extended Automatic Differentiation for Flexible Activation Checkpointing",
+        "3.5 Inference Framework",
+        "3.5.1 KV Cache Structure and Management"
+      ]
+    },
+    {
+      "page_number": 22,
+      "word_count": 413,
+      "has_images": true,
+      "image_count": 2,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 23,
+      "word_count": 555,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "Sparse Attention Kernel Co-Design.",
+        "3.5.2 On-Disk KV Cache Storage"
+      ]
+    },
+    {
+      "page_number": 24,
+      "word_count": 531,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "4 Pre-Training",
+        "4.1 Data Construction",
+        "4.2 Pre-Training Setups",
+        "4.2.1 Model Setups"
+      ]
+    },
+    {
+      "page_number": 25,
+      "word_count": 713,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "DeepSeek-V4-Pro.",
+        "4.2.2 Training Setups",
+        "DeepSeek-V4-Flash.",
+        "DeepSeek-V4-Pro."
+      ]
+    },
+    {
+      "page_number": 26,
+      "word_count": 528,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "4.2.3 Mitigating Training Instability"
+      ]
+    },
+    {
+      "page_number": 27,
+      "word_count": 374,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "4.3.1 Evaluation Benchmarks",
+        "4.3.2 Evaluation Results"
+      ]
+    },
+    {
+      "page_number": 28,
+      "word_count": 570,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": [
+        "5. Post-Training",
+        "5.1. Post-Training Pipeline",
+        "5.1.1. Specialist Training"
+      ]
+    },
+    {
+      "page_number": 29,
+      "word_count": 363,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": [
+        "Injected Instruction"
+      ]
+    },
+    {
+      "page_number": 30,
+      "word_count": 352,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": []
+    },
+    {
+      "page_number": 31,
+      "word_count": 228,
+      "has_images": true,
+      "image_count": 2,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 32,
+      "word_count": 449,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": [
+        "5.1.2. On-Policy Distillation"
+      ]
+    },
+    {
+      "page_number": 33,
+      "word_count": 548,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "5.2 Post-Training Infrastructures",
+        "5.2.1 FP4 Quantization-Aware Training"
+      ]
+    },
+    {
+      "page_number": 34,
+      "word_count": 545,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "5.2.2 Efficient Teacher Scheduling for Full-Vocabulary OPD",
+        "5.2.3 Preemptible and Fault-Tolerant Rollout Service"
+      ]
+    },
+    {
+      "page_number": 35,
+      "word_count": 509,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "5.2.4 Scaling RL Framework for Million-Token Context",
+        "5.2.5 Sandbox Infrastructure for Agentic AI"
+      ]
+    },
+    {
+      "page_number": 36,
+      "word_count": 526,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "5.3 Standard Benchmark Evaluation",
+        "5.3.1 Evaluation Setup"
+      ]
+    },
+    {
+      "page_number": 37,
+      "word_count": 497,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "5.3.2 Evaluation Results"
+      ]
+    },
+    {
+      "page_number": 38,
+      "word_count": 653,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": []
+    },
+    {
+      "page_number": 39,
+      "word_count": 687,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": []
+    },
+    {
+      "page_number": 40,
+      "word_count": 250,
+      "has_images": true,
+      "image_count": 3,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 41,
+      "word_count": 317,
+      "has_images": true,
+      "image_count": 2,
+      "has_tables": false,
+      "headings": [
+        "5.4. Performance on Real-World Tasks",
+        "5.4.1. Chinese Writing"
+      ]
+    },
+    {
+      "page_number": 42,
+      "word_count": 410,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "5.4.3 White-Collar Task"
+      ]
+    },
+    {
+      "page_number": 43,
+      "word_count": 186,
+      "has_images": true,
+      "image_count": 6,
+      "has_tables": false,
+      "headings": []
+    },
+    {
+      "page_number": 44,
+      "word_count": 522,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": true,
+      "headings": [
+        "5.4.4. Code Agent",
+        "6. Conclusion, Limitations, and Future Directions"
+      ]
+    },
+    {
+      "page_number": 45,
+      "word_count": 572,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": [
+        "References"
+      ]
+    },
+    {
+      "page_number": 46,
+      "word_count": 561,
+      "has_images": false,
+      "image_count": 0,
+      "has_tables": false,
+      "headings": []
+    }
+  ],
+  "keywords": []
+}

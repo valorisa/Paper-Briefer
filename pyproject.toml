@@ -1,0 +1,35 @@
+[project]
+name = "paper-briefer"
+version = "0.1.0"
+description = "Compress academic papers into optimized context for LLM conversations"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "valorisa" }]
+keywords = ["paper", "llm", "context", "ocr", "academic", "compression", "metadata"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/valorisa/paper-briefer"
+Repository = "https://github.com/valorisa/paper-briefer"
+Issues = "https://github.com/valorisa/paper-briefer/issues"
+Changelog = "https://github.com/valorisa/paper-briefer/blob/main/CHANGELOG.md"
+
+[project.scripts]
+paper-briefer = "paper_briefer.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
