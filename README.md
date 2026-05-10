@@ -40,6 +40,8 @@ Cette commande produit deux fichiers :
 
 ### Exemple concret
 
+L'exemple inclus dans ce repo a été généré à partir du rapport technique [DeepSeek-V4](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf), traité via OCR Playground puis passé dans `paper-briefer` :
+
 ```bash
 $ paper-briefer deepseek-v4.zip -o output/
 
