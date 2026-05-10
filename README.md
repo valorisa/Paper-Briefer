@@ -1,25 +1,25 @@
 # paper-briefer
 
-> Compress academic papers into optimized context for LLM conversations.
+> Compresse des articles scientifiques en contexte optimisé pour les conversations avec des LLM (Claude, ChatGPT, etc.).
 
-## The Problem
+## Le problème
 
-You've just found a 40-page technical paper you need to understand. You want to discuss it with Claude, ChatGPT, or any other LLM — ask questions about the architecture, challenge the methodology, understand the limitations.
+Vous venez de trouver un article technique de 40 pages que vous devez comprendre. Vous voulez en discuter avec Claude ou ChatGPT : poser des questions sur l'architecture, vérifier les résultats, comprendre les limites.
 
-But pasting the raw text is wasteful:
+Mais coller le texte brut dans un LLM pose plusieurs problèmes :
 
-- OCR output is full of formatting noise, image references, and boilerplate
-- Most of the token budget goes to content that doesn't help the conversation
-- The LLM has no structural map of the paper — it can't distinguish novel claims from background review
-- You're paying for tokens that carry zero semantic value
+- Le texte issu d'un OCR est plein de bruit : références d'images, formatage cassé, en-têtes répétés
+- La majorité des tokens consommés n'apportent rien à la conversation
+- Le LLM n'a aucune carte mentale de l'article : il ne distingue pas les claims originales du survol bibliographique
+- Vous payez (en tokens ou en qualité de réponse) pour du contenu sans valeur sémantique
 
-## The Solution
+## La solution
 
-`paper-briefer` extracts the **semantic skeleton** of a paper — the claims, the evidence, the specifications, the limitations, the argument structure — and compresses it into a ~3-4K token brief that preserves discussion quality.
+`paper-briefer` extrait le **squelette sémantique** d'un article : les claims, les preuves visuelles, les spécifications, les limitations, la structure argumentaire. Il compresse le tout en un brief de ~3-4K tokens qui préserve la qualité de discussion.
 
-The brief isn't a summary. It's a **structured context injection** designed to give an LLM everything it needs to have an informed conversation about the paper, without the noise.
+Le brief n'est pas un résumé. C'est une **injection de contexte structurée**, conçue pour donner au LLM tout ce dont il a besoin pour mener une conversation informée sur l'article, sans le bruit.
 
-## Quick Start
+## Prise en main rapide
 
 ### Installation
 
@@ -27,18 +27,18 @@ The brief isn't a summary. It's a **structured context injection** designed to g
 pip install paper-briefer
 ```
 
-### Basic Usage
+### Utilisation de base
 
 ```bash
-paper-briefer paper-export.zip
+paper-briefer article-export.zip
 ```
 
-This produces two files:
+Cette commande produit deux fichiers :
 
-- `paper-export-brief.md` — the compressed brief (~3-4K tokens), ready to paste into any LLM
-- `paper-export-metadata.json` — full structured metadata for programmatic use
+- `article-export-brief.md` : le brief compressé (~3-4K tokens), prêt à coller dans n'importe quel LLM
+- `article-export-metadata.json` : les métadonnées structurées complètes, pour un usage programmatique
 
-### Example
+### Exemple concret
 
 ```bash
 $ paper-briefer deepseek-v4.zip -o output/
@@ -50,173 +50,174 @@ Extracting metadata from deepseek-v4.zip...
 Done.
 ```
 
-## What's in the Brief?
+## Que contient le brief ?
 
-The brief is organized into semantic layers, each serving a specific purpose for LLM comprehension:
+Le brief est organisé en couches sémantiques, chacune servant un objectif précis pour la compréhension par un LLM :
 
-| Section | Purpose | Example |
-|---------|---------|---------|
-| Title + scope | Paper identity and scale | "46 pages, 22 figures/tables, 20K words" |
-| Abstract | Core claims in the authors' own words | Full abstract preserved |
-| Key contributions | What's genuinely novel | "hybrid attention combining CSA and HCA" |
-| Specifications | Numbers that define the system | "1.6T params, 49B activated, 1M context" |
-| Figures & tables | Visual evidence with captions + anchor sentences | What each figure proves, in context |
-| Structure | Navigable table of contents | Section hierarchy with page numbers |
-| Limitations & future work | What the authors acknowledge doesn't work | Extracted from conclusion |
-| Evidence density | Which pages are reference-heavy vs novel content | Guides where to look for innovation |
-| Cross-references | How sections depend on each other | "Section 3.2 references Figure 5" |
-| Keywords | Technical vocabulary | Enables precise follow-up queries |
+| Section | Rôle | Exemple |
+| ------- | ---- | ------- |
+| Titre + périmètre | Identité et échelle de l'article | "46 pages, 22 figures, 20K mots" |
+| Résumé | Claims principales, dans les mots des auteurs | Abstract complet préservé |
+| Contributions clés | Ce qui est réellement nouveau | "attention hybride combinant CSA et HCA" |
+| Spécifications | Les chiffres qui définissent le système | "1.6T params, 49B activés, 1M contexte" |
+| Figures et tableaux | Preuves visuelles avec légendes + phrases d'ancrage | Ce que chaque figure démontre, en contexte |
+| Structure | Table des matières navigable | Hiérarchie des sections avec pages |
+| Limitations et perspectives | Ce que les auteurs reconnaissent comme faiblesses | Extrait de la conclusion |
+| Densité de preuves | Quelles pages sont riches en références vs. contenu original | Guide pour repérer l'innovation |
+| Références croisées | Comment les sections dépendent les unes des autres | "Section 3.2 référence Figure 5" |
+| Mots-clés | Vocabulaire technique | Permet des questions de suivi précises |
 
-### Why These Layers?
+### Pourquoi ces couches ?
 
-This structure was designed and validated through an adversarial review process (documented in `docs/design-decisions/`). Key insight: **figures and tables carry the proof**. A paper's claims live in the text, but the evidence lives in the visuals. Extracting figure captions with their in-text anchor sentences ("Figure 3 shows that...") transforms the brief from a document index into an evidence map.
+Cette structure a été conçue et validée via un processus de revue contradictoire (documenté dans `docs/design-decisions/`). Insight clé : **les figures et tableaux portent la preuve**. Les claims d'un article vivent dans le texte, mais les preuves vivent dans les visuels. Extraire les légendes de figures avec leurs phrases d'ancrage ("La Figure 3 montre que...") transforme le brief d'un simple index en une carte des preuves.
 
-## How to Use the Brief
+## Comment utiliser le brief
 
-### With Claude or ChatGPT
+### Avec Claude ou ChatGPT
 
-Paste the brief as context, then have a natural conversation:
+Collez le brief comme contexte, puis posez vos questions naturellement :
 
 ```text
-Here's a structured brief of the paper I want to discuss:
+Voici le brief structuré de l'article dont je veux discuter :
 
-[paste brief.md content here]
+[collez ici le contenu du fichier brief.md]
 
-Based on this paper:
-1. How does the attention architecture differ from the previous version?
-2. What are the specific efficiency gains for long-context scenarios?
-3. What limitations should I be aware of before building on this work?
+Questions :
+- Comment l'architecture d'attention diffère-t-elle de la version précédente ?
+- Quels sont les gains d'efficacité concrets pour les contextes longs ?
+- Quelles limitations dois-je garder en tête avant de m'appuyer sur ce travail ?
 ```
 
-### With Claude Code or Cursor
+### Avec Claude Code ou Cursor
 
-Place the brief in your project and reference it:
+Placez le brief dans votre projet et référencez-le :
 
 ```bash
-paper-briefer paper.zip -o docs/
-# Then in Claude Code: "Read docs/paper-brief.md and explain the architecture"
+paper-briefer article.zip -o docs/
+# Ensuite dans Claude Code : "Lis docs/article-brief.md et explique-moi l'architecture"
 ```
 
-### As a Research Pipeline
+### Comme pipeline de recherche (API Python)
 
 ```python
 from paper_briefer.extract import extract
 from paper_briefer.brief import generate_brief
 
-metadata = extract("paper.zip")
+metadata = extract("article.zip")
 
-# Access structured data programmatically
+# Accès programmatique aux données structurées
 for fig in metadata.figures_and_tables:
     print(f"{fig.id}: {fig.caption}")
     for anchor in fig.anchor_sentences:
-        print(f"  Evidence: {anchor}")
+        print(f"  Preuve: {anchor}")
 
-# Generate the brief
+# Générer le brief
 brief = generate_brief(metadata)
+print(brief)
 ```
 
-## Compression Quality
+## Qualité de compression
 
-### Validation Methodology
+### Protocole de validation
 
-We tested the brief on the DeepSeek-V4 technical report (46 pages, 20,270 words, 22 figures) by giving the brief to a fresh LLM instance (no access to the original paper) and asking 5 substantive technical questions covering architecture, quantitative claims, limitations, novelty assessment, and practical implications.
+Nous avons testé le brief sur le rapport technique DeepSeek-V4 (46 pages, 20 270 mots, 22 figures) en donnant le brief à une instance LLM fraîche (sans accès à l'article original) et en posant 5 questions techniques couvrant : architecture, claims quantitatives, limitations, évaluation de la nouveauté et implications pratiques.
 
-### Results
+### Résultats
 
-| Metric | Value |
-|--------|-------|
-| Input size | 20,270 words (~27K tokens) |
-| Brief size | ~4,155 tokens |
-| Compression ratio | ~5x |
-| Questions answered correctly | 4/5 |
+| Métrique | Valeur |
+| -------- | ------ |
+| Taille d'entrée | 20 270 mots (~27K tokens) |
+| Taille du brief | ~4 155 tokens |
+| Ratio de compression | ~5x |
+| Questions correctement répondues | 4/5 |
 | Hallucinations | 0 |
-| Correctly identified gaps | Yes (said "I don't know" when info was missing) |
+| Identification correcte des lacunes | Oui (dit "je ne sais pas" quand l'info manque) |
 
-### What Worked
+### Ce qui a fonctionné
 
-- **Architecture questions**: Correctly explained the CSA/HCA hybrid mechanism from figure descriptions
-- **Quantitative claims**: All benchmark numbers reproduced exactly (pass rates, FLOPs ratios)
-- **Novelty assessment**: Distinguished inherited from new components
-- **Deployment implications**: Derived practical advantages from specs
+- **Questions d'architecture** : explication correcte du mécanisme CSA/HCA à partir des descriptions de figures
+- **Claims quantitatives** : tous les chiffres de benchmarks reproduits exactement (taux de réussite, ratios de FLOPs)
+- **Évaluation de la nouveauté** : distinction correcte entre composants hérités et nouveaux
+- **Implications déploiement** : avantages pratiques déduits des spécifications
 
-### What Failed (and How We Fixed It)
+### Ce qui a échoué (et comment c'est corrigé)
 
-- **Limitations question**: The original brief didn't extract the "Limitations & Future Work" section. The LLM correctly said "this information is not in the brief" rather than hallucinating. Fixed in v0.1 by adding limitations extraction.
+- **Question sur les limitations** : le brief initial n'extrayait pas la section "Limitations & Future Work". Le LLM a correctement dit "cette information n'est pas dans le brief" plutôt que d'halluciner. Corrigé en v0.1 par l'ajout de l'extraction des limitations.
 
-## Input Format
+## Format d'entrée
 
-### Currently Supported
+### Actuellement supporté
 
-**OCR Playground ZIP exports** — the structured format produced by [OCR Playground](https://ocr.space) when exporting processed documents. The ZIP contains:
+**Exports ZIP d'OCR Playground** : le format structuré produit par [OCR Playground](https://ocr.space) lors de l'export de documents traités. Le ZIP contient :
 
 ```text
 document.pdf/
-  markdown.md              <- full document as markdown
+  markdown.md              <- document complet en markdown
   pages/
     page-1/
-      markdown.md          <- per-page content
-      img-0.jpeg           <- extracted images
+      markdown.md          <- contenu par page
+      img-0.jpeg           <- images extraites
       img-0.jpeg-annotation.json
-      hyperlinks.md        <- extracted URLs
+      hyperlinks.md        <- URLs extraites
     page-2/
       ...
 ```
 
-### Planned
+### Prévu pour les prochaines versions
 
-- Direct PDF input (via built-in OCR or external tools)
-- arXiv LaTeX source
-- Plain markdown files
+- Entrée PDF directe (via OCR intégré ou outils externes)
+- Sources LaTeX arXiv
+- Fichiers markdown simples
 
-## CLI Reference
+## Référence CLI
 
 ```bash
-# Basic: produce both brief and metadata
+# Basique : produit le brief ET les métadonnées
 paper-briefer input.zip
 
-# Specify output directory
-paper-briefer input.zip -o ./analysis/
+# Spécifier un répertoire de sortie
+paper-briefer input.zip -o ./analyse/
 
-# Only the markdown brief (for pasting into LLMs)
+# Seulement le brief markdown (pour coller dans un LLM)
 paper-briefer input.zip --brief-only
 
-# Only the structured JSON (for programmatic use)
+# Seulement le JSON structuré (pour usage programmatique)
 paper-briefer input.zip --json-only
 ```
 
-## Architecture
+## Architecture du code
 
 ```text
 paper_briefer/
-  __init__.py     <- version
-  extract.py      <- Core extraction engine (ZIP -> DocumentMetadata)
-  brief.py        <- Brief generator (DocumentMetadata -> markdown)
-  cli.py          <- Command-line interface
+  __init__.py     <- version du package
+  extract.py      <- Moteur d'extraction (ZIP -> DocumentMetadata)
+  brief.py        <- Générateur de brief (DocumentMetadata -> markdown)
+  cli.py          <- Interface en ligne de commande
 ```
 
-### Extraction Layers
+### Couches d'extraction
 
-The extraction engine operates in three passes:
+Le moteur d'extraction opère en trois passes :
 
-1. **Structural pass** (regex): headings, ToC, page boundaries, word counts
-2. **Semantic pass** (regex + heuristics): figure captions, anchor sentences, cross-references, citation density, limitations
-3. **Intelligence pass** (planned, optional): LLM-augmented claim summaries, evidence typing
+1. **Passe structurelle** (regex) : titres, table des matières, limites de pages, comptage de mots
+2. **Passe sémantique** (regex + heuristiques) : légendes de figures, phrases d'ancrage, références croisées, densité de citations, limitations
+3. **Passe intelligence** (prévue, optionnelle) : résumés de claims augmentés par LLM, typage des preuves
 
-Layers 1 and 2 require no API keys or external dependencies. Layer 3 will be optional and use the Claude API for deeper semantic analysis.
+Les couches 1 et 2 ne nécessitent aucune clé API ni dépendance externe. La couche 3 sera optionnelle et utilisera l'API Claude pour une analyse sémantique plus profonde.
 
-## Design Decisions
+## Décisions de conception
 
-The positioning and feature set of this tool were validated through two LLM Council sessions (5 independent advisors + peer review + chairman synthesis). Key decisions documented in `docs/design-decisions/`:
+Le positionnement et les fonctionnalités de cet outil ont été validés via deux sessions de LLM Council (5 conseillers indépendants + revue par les pairs + synthèse du chairman). Décisions clés documentées dans `docs/design-decisions/` :
 
-- **Why "brief" over "summary"**: A summary loses structure. A brief preserves queryable relationships.
-- **Why figures first**: Figures and tables concentrate a paper's proof. Caption + anchor extraction gives 10x more comprehension ROI than section boundary detection.
-- **Why limitations matter**: The only question that failed validation was about limitations. Papers that acknowledge weaknesses are more trustworthy — and LLMs need that signal.
-- **Why not full semantic analysis in v1**: Regex extraction at ~0 cost covers 80% of value. LLM inference for claim graphs is the 20% that costs $5/paper — reserved for v2.
+- **Pourquoi "brief" plutôt que "résumé"** : un résumé perd la structure. Un brief préserve les relations interrogeables.
+- **Pourquoi les figures en priorité** : les figures et tableaux concentrent la preuve d'un article. L'extraction caption + ancre donne 10x plus de ROI en compréhension que la détection de limites de sections.
+- **Pourquoi les limitations comptent** : la seule question qui a échoué en validation portait sur les limitations. Les articles qui reconnaissent leurs faiblesses sont plus fiables, et les LLM ont besoin de ce signal.
+- **Pourquoi pas l'analyse sémantique complète en v1** : l'extraction par regex à coût ~0 couvre 80% de la valeur. L'inférence LLM pour les graphes de claims représente les 20% restants à ~5$/article, réservé pour la v2.
 
-## Contributing
+## Contribuer
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
+Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour la configuration de développement et les conventions.
 
-## License
+## Licence
 
 MIT
