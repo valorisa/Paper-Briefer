@@ -18,7 +18,7 @@ python -m pytest tests/
 
 ## Project Structure
 
-```
+```text
 paper-briefer/
   paper_briefer/        <- source package
   tests/                <- test suite
@@ -40,7 +40,7 @@ New input formats (PDF, arXiv, etc.) should be implemented as separate modules i
 
 We use Conventional Commits 1.0.0:
 
-```
+```text
 feat(extract): add equation context extraction
 fix(brief): handle papers without abstract section
 docs: update compression quality results

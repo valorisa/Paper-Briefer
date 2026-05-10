@@ -77,7 +77,7 @@ This structure was designed and validated through an adversarial review process 
 
 Paste the brief as context, then have a natural conversation:
 
-```
+```text
 Here's a structured brief of the paper I want to discuss:
 
 [paste brief.md content here]
@@ -149,7 +149,7 @@ We tested the brief on the DeepSeek-V4 technical report (46 pages, 20,270 words,
 
 **OCR Playground ZIP exports** — the structured format produced by [OCR Playground](https://ocr.space) when exporting processed documents. The ZIP contains:
 
-```
+```text
 document.pdf/
   markdown.md              <- full document as markdown
   pages/
@@ -186,7 +186,7 @@ paper-briefer input.zip --json-only
 
 ## Architecture
 
-```
+```text
 paper_briefer/
   __init__.py     <- version
   extract.py      <- Core extraction engine (ZIP -> DocumentMetadata)

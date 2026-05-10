@@ -1,11 +1,14 @@
 # DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence
+
 **Authors:** research@deepseek.com
 **Scope:** 46 pages, 22 figures/tables, 20270 words
 
 ## Abstract
+
 We present a preview version of DeepSeek-V4 series, including two strong Mixture-of-Experts (MoE) language models — DeepSeek-V4-Pro with 1.6T parameters (49B activated) and DeepSeek-V4-Flash with 284B parameters (13B activated) — both supporting a context length of one million tokens. DeepSeek-V4 series incorporate several key upgrades in architecture and optimization: (1) a hybrid attention architecture that combines Compressed Sparse Attention (CSA) and Heavily Compressed Attention (HCA) to improve long-context efficiency; (2) Manifold-Constrained Hyper-Connections (mHC) that enhance conventional residual connections; (3) and the Muon optimizer for faster convergence and greater training stability. We pre-train both models on more than 32T diverse and high-quality tokens, followed by a comprehensive post-training pipeline that unlocks and further enhances their capabilities. DeepSeek-V4-Pro-Max, the maximum reasoning effort mode of DeepSeek-V4-Pro, redefines the state-of-the-art for open models, outperforming its predecessors in core tasks. Meanwhile, DeepSeek-V4 series are highly efficient in long-context scenarios. In the one-million-token context setting, DeepSeek-V4-Pro requires only $27\%$ of single-token inference FLOPs and $10\%$ of KV cache compared with DeepSeek-V3.2. This enables us to routinely support one-million-token contexts, thereby making long-horizon tasks and further test-time scaling more feasible. The model checkpoints are available at https://huggingfa
 
 ## Key Contributions
+
 - the DeepSeek-V4 series
 - a hybrid attention mechanism combining Compressed Sparse Attention (CSA) and Heavily Compressed Attention (HCA)
 - the Muon *(Jordan et al
@@ -14,11 +17,13 @@ We present a preview version of DeepSeek-V4 series, including two strong Mixture
 - a heterogeneous KV cache structure with on-disk storage strategies to enable efficient shared-prefix reuse
 
 ## Specifications
+
 - **DeepSeek-V4-Pro**: total_parameters: 1.6T, activated_parameters: 49B
 - **and DeepSeek-V4-Flash**: total_parameters: 284B, activated_parameters: 13B
 - **iew versions of DeepSeek-V4-Pro**: total_parameters: 1.6T, activated_parameters: 49B
 
 ## Key Figures & Tables
+
 **Figure 1** (p.1): Left: benchmark performance of DeepSeek-V4-Pro-Max and its counterparts. Right: inference FLOPs and KV cache size of DeepSeek-V4 series and DeepSeek-V3.2.
   > Figure 1 | Left: benchmark performance of DeepSeek-V4-Pro-Max and its counterparts.
   > The right part of Figure 1 demonstrates the estimated single-token inference FLOPs and accumulated KV cache size of DeepSeek-V3.2 and DeepSeek-V4 series.
@@ -86,6 +91,7 @@ We present a preview version of DeepSeek-V4 series, including two strong Mixture
   > Table 8 | Comparison on R&amp;D Coding Benchmark (external models included strictly for evaluation purposes).
 
 ## Structure
+
 - 1 Introduction (p.4)
 - 2 Architecture (p.6)
 - 2.1 Designs Inherited from DeepSeek-V3 (p.7)
@@ -109,13 +115,16 @@ We present a preview version of DeepSeek-V4 series, including two strong Mixture
 - 6 Conclusion, Limitations, and Future Directions
 
 ## Limitations & Future Work
+
 - A Author List and Acknowledgment - A.1 Author List - A.2 Acknowledgment - B Evaluation Details 1 Introduction The emergence of reasoning models *(DeepSeek-AI, 2025; OpenAI, 2024c)* has established a new paradigm of test-time scaling, driving substantial performance gains for Large Language Models (LLMs). However, this scaling paradigm is fundamentally constrained by the quadratic computational complexity of the vanilla attention mechanism *(Vaswani et al., 2017)*, which creates a prohibitive bottleneck for ultra-long contexts and reasoning processes. Concurrently, the emergence of long-horizon scenarios and tasks — from complex agentic workflows to massive cross-document analysis — has also made efficient support for ultra-long contexts critical for future progress. While recent open-source efforts *(Bai et al., 2025a; DeepSeek-AI, 2024; MiniMax, 2025; Qwen, 2025)* have advanced general capabilities, this core architectural inefficiency in handling ultra-long sequences remains a key 
 
 ## Evidence Density
+
 Reference-heavy pages: p.27, p.36, p.37
 Novel content pages: p.1, p.2, p.3, p.8, p.9, p.10, p.11, p.12, p.15, p.16
 
 ## Cross-References
+
 - p.7 → Figure 2: ### 2.2 Manifold-Constrained Hyper-Connections As shown in Figure 2, DeepSeek-V4 series incorporate 
 - p.15 → Figure 5: ctively hidden beneath computation in MoE layers. As shown in Figure 5, in DeepSeek-V4 series, each 
 - p.29 → Table 3: em prompt to guide the model's reasoning process, as shown in Table 3. Table 2 | Comparison of three

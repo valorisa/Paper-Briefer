@@ -9,23 +9,27 @@ def generate_brief(meta: DocumentMetadata) -> str:
     parts: list[str] = []
 
     parts.append(f"# {meta.title}")
+    parts.append("")
     parts.append(f"**Authors:** {meta.authors}")
     parts.append(f"**Scope:** {meta.total_pages} pages, {meta.total_images} figures/tables, {meta.total_word_count} words")
     parts.append("")
 
     if meta.abstract:
         parts.append("## Abstract")
+        parts.append("")
         parts.append(meta.abstract)
         parts.append("")
 
     if meta.key_contributions:
         parts.append("## Key Contributions")
+        parts.append("")
         for c in meta.key_contributions:
             parts.append(f"- {c}")
         parts.append("")
 
     if meta.model_specs:
         parts.append("## Specifications")
+        parts.append("")
         for name, data in meta.model_specs.items():
             if isinstance(data, dict):
                 items = ", ".join(f"{k}: {v}" for k, v in data.items())
@@ -34,6 +38,7 @@ def generate_brief(meta: DocumentMetadata) -> str:
 
     if meta.figures_and_tables:
         parts.append("## Key Figures & Tables")
+        parts.append("")
         for ft in meta.figures_and_tables:
             parts.append(f"**{ft.id}** (p.{ft.page}): {ft.caption}")
             for anchor in ft.anchor_sentences[:2]:
@@ -44,6 +49,7 @@ def generate_brief(meta: DocumentMetadata) -> str:
 
     if meta.table_of_contents:
         parts.append("## Structure")
+        parts.append("")
         for entry in meta.table_of_contents:
             depth = entry["section"].count(".")
             if depth <= 1:
@@ -53,6 +59,7 @@ def generate_brief(meta: DocumentMetadata) -> str:
 
     if meta.limitations:
         parts.append("## Limitations & Future Work")
+        parts.append("")
         parts.append(meta.limitations[:1000])
         parts.append("")
 
@@ -61,6 +68,7 @@ def generate_brief(meta: DocumentMetadata) -> str:
         low = [c for c in meta.citation_density if c["signal"] == "low_citation"]
         if high or low:
             parts.append("## Evidence Density")
+            parts.append("")
             if high:
                 page_list = ", ".join(f"p.{c['page']}" for c in high)
                 parts.append(f"Reference-heavy pages: {page_list}")
@@ -71,6 +79,7 @@ def generate_brief(meta: DocumentMetadata) -> str:
 
     if meta.cross_references:
         parts.append("## Cross-References")
+        parts.append("")
         for cr in meta.cross_references[:12]:
             parts.append(f"- p.{cr.source_page} → {cr.target_id}: {cr.source_context[:100]}")
         parts.append("")

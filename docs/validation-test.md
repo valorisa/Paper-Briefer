@@ -16,40 +16,50 @@
 ## Questions and Results
 
 ### Q1: Architecture (mechanism)
+
 **Question:** How does DeepSeek-V4 achieve its 10x KV cache reduction compared to V3?
 
 **Result:** PASS (Medium confidence)
+
 - Correctly identified CSA + HCA hybrid as the mechanism
 - Correctly described compression ratios and sliding window
 - Flagged missing: specific m/m' values, layer allocation ratios
 
 ### Q2: Quantitative claims
+
 **Question:** How does V4-Pro-Max compare to Claude models on coding tasks?
 
 **Result:** PASS (High confidence)
+
 - All 6 benchmark numbers reproduced exactly
 - Correct relative positioning (outperforms Sonnet, approaches Opus)
 - Flagged missing: benchmark methodology details
 
 ### Q3: Limitations
+
 **Question:** What limitations do the authors acknowledge?
 
 **Result:** FAIL (before fix) / PASS (after fix)
+
 - Brief did not contain limitations section
 - LLM correctly said "this information is not in the brief" (no hallucination)
 - Fixed by adding `_extract_limitations()` to extraction engine
 
 ### Q4: Novelty assessment
+
 **Question:** What's genuinely new in V4 vs V3?
 
 **Result:** PASS (Medium confidence)
+
 - Correctly separated: new (CSA/HCA, mHC, Muon) from inherited (DeepSeekMoE, MTP)
 - Flagged missing: MTP status unclear, quantitative ablation data
 
 ### Q5: Practical implications
+
 **Question:** What advantages would V4-Flash offer for document analysis deployment?
 
 **Result:** PASS (Medium-High confidence)
+
 - Derived 3.7x faster inference from 27% FLOPs ratio
 - Correctly identified 10x memory reduction
 - Made actionable deployment recommendations

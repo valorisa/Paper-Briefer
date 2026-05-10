@@ -15,6 +15,7 @@ If you discover a security vulnerability in paper-briefer, please report it resp
 3. Include steps to reproduce the issue
 
 Since this tool processes ZIP files, potential attack vectors include:
+
 - Zip bombs (mitigated by file count/size limits)
 - Path traversal in ZIP entries (mitigated by sanitizing extracted paths)
 - Malformed markdown triggering regex catastrophic backtracking
