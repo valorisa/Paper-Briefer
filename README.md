@@ -4,7 +4,7 @@
 
 ## Le problème
 
-Vous venez de trouver un article technique de 40 pages que vous devez comprendre. Vous voulez en discuter avec Claude ou ChatGPT : poser des questions sur l'architecture, vérifier les résultats, comprendre les limites.
+Vous venez de trouver un article technique de 58 pages que vous devez comprendre. Vous voulez en discuter avec Claude, Mistral, Deepseek, Perplexity, Qwen ou ChatGPT : poser des questions sur l'architecture, vérifier les résultats, comprendre les limites.
 
 Mais coller le texte brut dans un LLM pose plusieurs problèmes :
 
