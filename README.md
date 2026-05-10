@@ -4,7 +4,7 @@
 
 ## Le problème
 
-Vous venez de trouver un article archi technique de 58 pages en PDF (avec annotations, schémas, formules mathématiques et références) que vous souhaitez comprendre. Vous voulez en discuter avec Claude, Mistral, Deepseek, Perplexity, Qwen ou ChatGPT : poser des questions sur l'architecture, vérifier les résultats, comprendre les limites.
+Vous venez de trouver un article archi technique de 58 pages en PDF (avec annotations, schémas, formules mathématiques et références bibliographiques) que vous souhaitez comprendre. Vous voulez en discuter avec Claude, Mistral, Deepseek, Perplexity, Qwen ou ChatGPT : poser des questions sur l'architecture, vérifier les résultats, comprendre les limites.
 
 Mais coller le texte brut dans un LLM pose plusieurs problèmes :
 
