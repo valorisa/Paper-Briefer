@@ -19,6 +19,47 @@ Mais coller le texte brut dans un LLM pose plusieurs problèmes :
 
 Le brief n'est pas un résumé. C'est une **injection de contexte structurée**, conçue pour donner au LLM tout ce dont il a besoin pour mener une conversation informée sur l'article, sans le bruit.
 
+## Le workflow complet
+
+Voici le processus de bout en bout, du PDF brut à la conversation avec un LLM :
+
+```text
+┌─────────────────────────────────────────────────────────────────────┐
+│  1. DOCUMENT SOURCE                                                 │
+│     Un article scientifique au format PDF                           │
+│     (ex: DeepSeek-V4, 46 pages)                                    │
+└────────────────────────────┬────────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  2. OCR PLAYGROUND (Mistral AI)                                     │
+│     https://console.mistral.ai/build/document-ai/ocr-playground     │
+│                                                                     │
+│     Vous uploadez le PDF. Mistral AI le convertit en markdown       │
+│     structuré (une page = un fichier). Vous téléchargez le ZIP.     │
+└────────────────────────────┬────────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  3. PAPER-BRIEFER (cet outil)                                       │
+│     $ paper-briefer export.zip                                      │
+│                                                                     │
+│     Extrait le squelette sémantique : claims, figures avec          │
+│     légendes, spécifications, limitations, carte des preuves.       │
+│     Produit un brief de ~3-4K tokens.                               │
+└────────────────────────────┬────────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  4. CONVERSATION LLM                                                │
+│     Collez le brief dans Claude, ChatGPT, ou tout autre LLM.       │
+│     Posez vos questions. Le LLM répond comme s'il avait lu          │
+│     l'article entier — parce qu'il a la structure, pas le bruit.   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Résultat** : un article de 20 000 mots devient un brief de ~4 000 tokens (compression 5x) qui permet de répondre correctement à 4/5 questions techniques, sans aucune hallucination.
+
 ## Prise en main rapide
 
 ### Installation
