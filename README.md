@@ -40,7 +40,7 @@ Cette commande produit deux fichiers :
 
 ### Exemple concret
 
-L'exemple inclus dans ce repo a été généré à partir du rapport technique [DeepSeek-V4](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf), traité via OCR Playground puis passé dans `paper-briefer` :
+L'exemple inclus dans ce repo a été généré à partir du rapport technique [DeepSeek-V4](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/blob/main/DeepSeek_V4.pdf), traité via [OCR Playground de Mistral AI](https://console.mistral.ai/build/document-ai/ocr-playground) puis passé dans `paper-briefer` :
 
 ```bash
 $ paper-briefer deepseek-v4.zip -o output/
@@ -150,7 +150,7 @@ Nous avons testé le brief sur le rapport technique DeepSeek-V4 (46 pages, 20 27
 
 ### Actuellement supporté
 
-**Exports ZIP d'OCR Playground** : le format structuré produit par [OCR Playground](https://ocr.space) lors de l'export de documents traités. Le ZIP contient :
+**Exports ZIP d'OCR Playground** : le format structuré produit par [OCR Playground de Mistral AI](https://console.mistral.ai/build/document-ai/ocr-playground) lors de l'export de documents traités. Le ZIP contient :
 
 ```text
 document.pdf/
